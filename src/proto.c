@@ -24,6 +24,7 @@
 #include <string.h>
 
 #include "log.h"
+#include "mem.h"
 #include "uart.h"
 #include "proto.h"
 #include "version.h"
@@ -103,8 +104,27 @@ static void _version(uint8_t argc, char* argv[])
 
 }
 
+static void _mem(uint8_t argc, char* argv[]) {
+
+    if (strncmp(argv[1], "min", sizeof("min")) == 0) {
+
+        proto_output("%x", mem_free_min());
+
+    } else if (strncmp(argv[1], "cur", sizeof("cur")) == 0) {
+
+        proto_output("%x", mem_free_cur());
+
+    } else {
+
+        proto_error();
+
+    }
+
+}
+
 const char str_ping[] PROGMEM = "ping";
 const char str_version[] PROGMEM = "version";
+const char str_mem[] PROGMEM = "mem";
 
 typedef struct
 {
@@ -122,6 +142,7 @@ static const proto_command_t proto_commands[] PROGMEM = {
 
     {str_ping, 0, _ping},
     {str_version, 0, _version},
+    {str_mem, 1, _mem},
 
 };
 
