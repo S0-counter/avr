@@ -97,7 +97,7 @@ static void _ping(uint8_t argc, char* argv[])
 
 }
 
-static void _version(uint8_t argc, char* argv[])
+static void _ver(uint8_t argc, char* argv[])
 {
 
     proto_output("%d", VERSION);
@@ -123,7 +123,7 @@ static void _mem(uint8_t argc, char* argv[]) {
 }
 
 const char str_ping[] PROGMEM = "ping";
-const char str_version[] PROGMEM = "version";
+const char str_ver[] PROGMEM = "ver";
 const char str_mem[] PROGMEM = "mem";
 
 typedef struct
@@ -141,7 +141,7 @@ typedef struct
 static const proto_command_t proto_commands[] PROGMEM = {
 
     {str_ping, 0, _ping},
-    {str_version, 0, _version},
+    {str_ver, 0, _ver},
     {str_mem, 1, _mem},
 
 };
