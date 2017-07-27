@@ -27,28 +27,45 @@
 
 #define membersize(type, member) sizeof(((type *)0)->member)
 
-static prefs_t prefs FRAM;
+static prefs_t prefs_fram FRAM;
+static prefs_t prefs;
+
+static const prefs_t prefs_defaults PROGMEM = {
+
+    VERSION,
+    sizeof(prefs_t),
+
+    {
+        { "#0", 1000, 25, 35, 0 },
+        { "#1", 1000, 25, 35, 0 },
+        { "#2", 1000, 25, 35, 0 },
+        { "#3", 1000, 25, 35, 0 },
+        { "#4", 1000, 25, 35, 0 },
+        { "#5", 1000, 25, 35, 0 },
+        { "#6", 1000, 25, 35, 0 },
+        { "#7", 1000, 25, 35, 0 },
+    },
+
+};
 
 void prefs_init() {
 
-    version_t version;
-    size_t length;
-
-    fram_read_block(&prefs.version, &version, membersize(prefs_t, version));
-    fram_read_block(&prefs.length, &length, membersize(prefs_t, length));
+    fram_read_block(&prefs_fram, &prefs, sizeof(prefs_t));
 
     bool mismatch = false;
 
-    if (version != VERSION) {
+    if (prefs.version != VERSION) {
 
-        log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "version mismatch: %d != %d", version, VERSION);
+        log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "version mismatch: %d != %d", prefs.version, VERSION);
+
         mismatch = true;
 
     }
 
-    if (length != sizeof(prefs_t)) {
+    if (prefs.length != sizeof(prefs_t)) {
 
-        log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "length mismatch: %d != %d", length, sizeof(prefs_t));
+        log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "length mismatch: %d != %d", prefs.length, sizeof(prefs_t));
+
         mismatch = true;
 
     }
@@ -57,19 +74,22 @@ void prefs_init() {
 
         log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "restoring defaults");
 
-        // TODO Consider to write byte-wise or page-wise, since RAM might not be huge enough
-        char buffer[sizeof(prefs_t)];
-
-        memset(buffer, 0, sizeof(prefs_t));
-        fram_write_block(&prefs, buffer, sizeof(prefs_t));
-
-        version = VERSION;
-        length = sizeof(prefs_t);
-
-        fram_write_block(&prefs.version, &version, membersize(prefs_t, version));
-        fram_write_block(&prefs.length, &length, membersize(prefs_t, length));
+        memcpy_P(&prefs, &prefs_defaults, sizeof(prefs_t));
+        fram_write_block(&prefs_fram, &prefs, sizeof(prefs_t));
 
     }
+
+}
+
+prefs_t* prefs_get() {
+
+    return &prefs;
+
+}
+
+void prefs_save() {
+
+    fram_write_block(&prefs_fram, &prefs, sizeof(prefs_t));
 
 }
 

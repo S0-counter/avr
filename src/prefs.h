@@ -24,16 +24,23 @@
 #define CHANNELS 8
 
 // Per channel
+// TODO Move to s0 module?
 typedef struct {
 
     // Name/description of channel
-    char channel_name[32];
+    char name[32];
 
-    // Impulses per unit (e.g. 2000 imps / kWh)
-    uint16_t imp_unit;
+    // Impulses per unit (e.g. 2000 imps / kWh) -> 0 = disabled
+    uint16_t unit;
+
+    // Min impulse length
+    uint8_t min_len;
+
+    // Max impulse length
+    uint8_t max_len;
 
     // Actual counter (fixed point arithmetic 48 + 16?)
-    uint64_t imp_cnt;
+    uint64_t cnt;
 
 } channel_prefs_t;
 
@@ -48,4 +55,6 @@ typedef struct {
 } prefs_t;
 
 void prefs_init();
+prefs_t* prefs_get();
+void prefs_save();
 
