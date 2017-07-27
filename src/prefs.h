@@ -46,11 +46,11 @@ typedef struct {
 
 typedef struct {
 
-  version_t version;
+    version_t version;
 
-  size_t length;
+    size_t length;
 
-  channel_prefs_t channels[CHANNELS];
+    channel_prefs_t channels[CHANNELS];
 
 } prefs_t;
 
