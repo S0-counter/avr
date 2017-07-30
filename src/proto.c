@@ -26,8 +26,12 @@
 #include "log.h"
 #include "mem.h"
 #include "uart.h"
+#include "prefs.h"
 #include "proto.h"
 #include "version.h"
+
+// TODO Put this somewhere more central?
+#define membersize(type, member) sizeof(((type *)0)->member)
 
 #define PROTO_COMMAND_BUFFER_SIZE 64
 #define PROTO_OUTPUT_MAX_SIZE 64
@@ -56,7 +60,7 @@ static void proto_output(const char* message, ...)
 
 }
 
-static void proto_output_p(PGM_P message, ...)
+static void proto_output_P(PGM_P message, ...)
 {
 
     char str[PROTO_OUTPUT_MAX_SIZE];
@@ -69,19 +73,17 @@ static void proto_output_p(PGM_P message, ...)
 
 }
 
-#define proto_output_P(s, ...) proto_output_p(PSTR(s), ##__VA_ARGS__)
-
 static void proto_ok()
 {
 
-    proto_output_P("OK");
+    proto_output_P(PSTR("OK"));
 
 }
 
 static void proto_error()
 {
 
-    proto_output_P("ERR");
+    proto_output_P(PSTR("ERR"));
 
 }
 
@@ -97,22 +99,22 @@ static void _ping(uint8_t argc, char* argv[])
 
 }
 
-static void _ver(uint8_t argc, char* argv[])
+static void _version(uint8_t argc, char* argv[])
 {
 
-    proto_output("%d", VERSION);
+    proto_output_P(PSTR("%d"), VERSION);
 
 }
 
-static void _mem(uint8_t argc, char* argv[]) {
+static void _memory(uint8_t argc, char* argv[]) {
 
-    if (strncmp(argv[1], "min", sizeof("min")) == 0) {
+    if (strncmp_P(argv[1], PSTR("min"), sizeof("min")) == 0) {
 
-        proto_output("%x", mem_free_min());
+        proto_output_P(PSTR("%d"), mem_free_min());
 
-    } else if (strncmp(argv[1], "cur", sizeof("cur")) == 0) {
+    } else if (strncmp_P(argv[1], PSTR("cur"), sizeof("cur")) == 0) {
 
-        proto_output("%x", mem_free_cur());
+        proto_output_P(PSTR("%d"), mem_free_cur());
 
     } else {
 
@@ -122,9 +124,158 @@ static void _mem(uint8_t argc, char* argv[]) {
 
 }
 
+static void _channel(uint8_t argc, char* argv[]) {
+
+    if (argc < 4) {
+
+        goto error;
+
+    }
+
+    uint8_t channel;
+
+    if (sscanf_P(argv[1], PSTR("%hhu"), &channel) != 1) {
+
+        goto error;
+
+    }
+
+    if (channel >= CHANNELS) {
+
+        goto error;
+
+    }
+
+    if (strncmp_P(argv[2], PSTR("get"), sizeof("get")) == 0) {
+
+        if (strncmp_P(argv[3], PSTR("info"), sizeof("info")) == 0) {
+
+            // TODO Fixed point arithmetic
+            proto_output_P(PSTR("name: %s, unit: %d, min: %d, max: %d, counter: %d"), 
+                prefs_get()->channels[channel].name,
+                prefs_get()->channels[channel].unit,
+                prefs_get()->channels[channel].min,
+                prefs_get()->channels[channel].max,
+                prefs_get()->channels[channel].count);
+
+            return;
+
+        }
+
+    } else if (strncmp_P(argv[2], PSTR("set"), sizeof("set")) == 0) {
+
+        if (strncmp_P(argv[3], PSTR("name"), sizeof("name")) == 0) {
+
+            char str[32] = {};
+
+            for (uint8_t i = 4; i < argc; i++) {
+
+                if (strlen(str) + strlen(argv[i]) < membersize(channel_prefs_t, name)) {
+
+                    strcat(str, argv[i]);
+                    strcat(str, " ");
+
+                } else {
+
+                    goto error;
+
+                }
+
+            }
+
+            // Replace last space with null termination
+            str[strlen(str) - 1] = '\0';
+
+            strncpy(prefs_get()->channels[channel].name, str, membersize(channel_prefs_t, name));
+
+        } else if (strncmp_P(argv[3], PSTR("unit"), sizeof("unit")) == 0) {
+
+            uint16_t unit;
+
+            if (sscanf_P(argv[4], PSTR("%hu"), &unit) != 1) {
+
+                goto error;
+
+            }
+
+            prefs_get()->channels[channel].unit = unit;
+
+        } else if (strncmp_P(argv[3], PSTR("min"), sizeof("min")) == 0) {
+
+            uint8_t min;
+
+            if (sscanf_P(argv[4], PSTR("%hhu"), &min) != 1) {
+
+                goto error;
+
+            }
+
+            prefs_get()->channels[channel].min = min;
+
+        } else if (strncmp_P(argv[3], PSTR("max"), sizeof("max")) == 0) {
+
+            uint8_t max;
+
+            if (sscanf_P(argv[4], PSTR("%hhu"), &max) != 1) {
+
+                goto error;
+
+            }
+
+            prefs_get()->channels[channel].max = max;
+
+        }  else if (strncmp_P(argv[3], PSTR("count"), sizeof("count")) == 0) {
+
+            uint64_t count;
+
+            // TODO Fixed point arithmetic
+            if (sscanf_P(argv[4], PSTR("%lu"), &count) != 1) {
+
+                goto error;
+
+            }
+
+            prefs_get()->channels[channel].count = count;
+
+        } else {
+
+            goto error;
+
+        }
+
+        prefs_save();
+        proto_ok();
+
+        return;
+
+    }
+
+    error:
+
+        proto_error();
+
+}
+
+static void _log(uint8_t argc, char* argv[]) {
+
+    // TODO Implement
+    proto_error();
+
+}
+
+static void _factory(uint8_t argc, char* argv[]) {
+
+    prefs_reset();
+    proto_ok();
+
+}
+
 const char str_ping[] PROGMEM = "ping";
-const char str_ver[] PROGMEM = "ver";
-const char str_mem[] PROGMEM = "mem";
+const char str_version[] PROGMEM = "version";
+const char str_memory[] PROGMEM = "memory";
+const char str_channel[] PROGMEM = "channel";
+const char str_log[] PROGMEM = "log";
+const char str_factory[] PROGMEM = "factory";
 
 typedef struct
 {
@@ -141,8 +292,11 @@ typedef struct
 static const proto_command_t proto_commands[] PROGMEM = {
 
     {str_ping, 0, _ping},
-    {str_ver, 0, _ver},
-    {str_mem, 1, _mem},
+    {str_version, 0, _version},
+    {str_memory, 1, _memory},
+    {str_channel, -1, _channel},
+    {str_log, -1, _log},
+    {str_factory, 0, _factory},
 
 };
 

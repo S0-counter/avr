@@ -48,15 +48,6 @@ static const prefs_t prefs_defaults PROGMEM = {
 
 };
 
-static void prefs_reset() {
-
-    log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "restoring defaults");
-
-    memcpy_P(&prefs, &prefs_defaults, sizeof(prefs_t));
-    prefs_save();
-
-}
-
 void prefs_init() {
 
     fram_read_block(&prefs_fram, &prefs, sizeof(prefs_t));
@@ -95,7 +86,18 @@ prefs_t* prefs_get() {
 
 void prefs_save() {
 
+    log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "saving preferences");
+
     fram_write_block(&prefs_fram, &prefs, sizeof(prefs_t));
+
+}
+
+void prefs_reset() {
+
+    log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "resetting preferences");
+
+    memcpy_P(&prefs, &prefs_defaults, sizeof(prefs_t));
+    prefs_save();
 
 }
 

@@ -25,6 +25,7 @@
 
 // Per channel
 // TODO Move to s0 module?
+// TODO Save log levels?
 typedef struct {
 
     // Name/description of channel
@@ -34,13 +35,13 @@ typedef struct {
     uint16_t unit;
 
     // Min impulse length
-    uint8_t min_len;
+    uint8_t min;
 
     // Max impulse length
-    uint8_t max_len;
+    uint8_t max;
 
     // Actual counter (fixed point arithmetic 48 + 16?)
-    uint64_t cnt;
+    uint64_t count;
 
 } channel_prefs_t;
 
@@ -57,4 +58,5 @@ typedef struct {
 void prefs_init();
 prefs_t* prefs_get();
 void prefs_save();
+void prefs_reset();
 

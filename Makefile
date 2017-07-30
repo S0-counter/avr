@@ -7,7 +7,7 @@ PROGRAMMER=stk500v2
 PORT=-P/dev/ttyUSB0
 BAUD=-B500kHz
 
-CFLAGS=-flto -Os -Wall -Werror -std=c11 -fshort-enums -g2 -gdwarf -c -DF_CPU=$(F_CPU)UL
+CFLAGS=-flto -Os -Wall -Werror -std=c11 -fshort-enums -g2 -gdwarf -c -DF_CPU=$(F_CPU)UL -Wno-unused-function
 LDFLAGS=-flto -Os -Wl,-Map,$(BINDIR)/$(TARGET).map -Wl,--section-start=.fram=0x860000
 
 RM=rm
