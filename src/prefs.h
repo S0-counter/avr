@@ -41,7 +41,7 @@ typedef struct {
     uint8_t max;
 
     // Actual counter (fixed point arithmetic 48 + 16?)
-    uint64_t count;
+    uint32_t count;
 
 } channel_prefs_t;
 
