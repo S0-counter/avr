@@ -108,19 +108,7 @@ static void _version(uint8_t argc, char* argv[])
 
 static void _memory(uint8_t argc, char* argv[]) {
 
-    if (strncmp_P(argv[1], PSTR("min"), sizeof("min")) == 0) {
-
-        proto_output_P(PSTR("%d"), mem_free_min());
-
-    } else if (strncmp_P(argv[1], PSTR("cur"), sizeof("cur")) == 0) {
-
-        proto_output_P(PSTR("%d"), mem_free_cur());
-
-    } else {
-
-        proto_error();
-
-    }
+    proto_output_P(PSTR("cur: %d, min: %d"), mem_free_cur(), mem_free_min());
 
 }
 
@@ -293,7 +281,7 @@ static const proto_command_t proto_commands[] PROGMEM = {
 
     {str_ping, 0, _ping},
     {str_version, 0, _version},
-    {str_memory, 1, _memory},
+    {str_memory, 0, _memory},
     {str_channel, -1, _channel},
     {str_log, -1, _log},
     {str_factory, 0, _factory},
