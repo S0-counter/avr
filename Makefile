@@ -18,8 +18,12 @@ AVRDUDE=avrdude
 
 SRCDIR=src
 BINDIR=bin
+DEPDIR=.d
 
 OBJECTS=$(addprefix $(BINDIR)/, $(SOURCES:.c=.o))
+DEPS=$(addprefix $(DEPDIR)/, $(SOURCES:.c=.d))
+
+DEPFLAGS=-MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
 
 DOXYGEN=doxygen
 DOCDIR=doc
@@ -38,7 +42,7 @@ $(BINDIR)/$(TARGET).elf: $(OBJECTS)
 	$(CC) $(LDFLAGS) -mmcu=$(MCU) $(OBJECTS) -o $@
 
 $(BINDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(CFLAGS) -mmcu=$(MCU) $< -o $@
+	$(CC) -c $(CFLAGS) $(DEPFLAGS) -mmcu=$(MCU) -o $@ $<
 
 size: $(BINDIR)/$(TARGET).elf
 	$(SIZE) --mcu=$(MCU) -C $<
@@ -51,5 +55,8 @@ doc:
 
 clean:
 	$(RM) -rf $(BINDIR)/*
+	$(RM) -rf $(DEPDIR)/*
 	$(RM) -rf $(DOCDIR)/doxygen
+
+-include $(DEPS)
 
