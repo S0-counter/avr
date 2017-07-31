@@ -29,7 +29,7 @@ void timer_init()
 
     TCCR0A = _BV(WGM01);
     TCCR0B = _BV(CS01) | _BV(CS00);
-    OCR0A = 125;
+    OCR0A = F_CPU / 64 / 1000;
     TIMSK0 = _BV(OCIE0A);
 
     log_output_P(LOG_MODULE_TIMER, LOG_LEVEL_DEBUG, "initialized");
@@ -38,6 +38,8 @@ void timer_init()
 
 static inline void timer_1khz()
 {
+
+    s0_poll();
 
 }
 

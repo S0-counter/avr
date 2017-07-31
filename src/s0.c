@@ -19,53 +19,122 @@
 
 #include <avr/io.h>
 
-#include <stdbool.h>
-
+#include "fifo.h"
 #include "log.h"
+#include "prefs.h"
 #include "s0.h"
 #include "timer.h"
+
+#define membersize(type, member) sizeof(((type *)0)->member)
+
+static uint8_t impulses[CHANNELS];
+
+typedef struct
+{
+
+    volatile uint8_t *port;
+    uint8_t pin;
+
+} s0_channel_t;
+
+static s0_channel_t channels[CHANNELS] = {
+
+    {&PINC, 0},
+    {&PINC, 1},
+    {&PIND, 2},
+    {NULL, 0},
+    {NULL, 0},
+    {NULL, 0},
+    {NULL, 0},
+    {NULL, 0},
+
+};
+
+#define PORTA_MASK 0x0
+#define PORTB_MASK 0x0
+#define PORTC_MASK 0x3
+#define PORTD_MASK 0x4
+
+#define S0_FIFO_BUFFER_SIZE 64
+
+static fifo_t s0_fifo;
+static uint8_t s0_fifo_buffer[S0_FIFO_BUFFER_SIZE];
 
 void s0_init()
 {
 
-   // Setup pins (input with pull-up enabled)
+    // Setup pins (input with pull-up enabled)
 
-   //DDRC &= ~S0_PORTA_MASK;
-   //PORTC |= S0_PORTA_MASK;
+    DDRB &= ~PORTB_MASK;
+    PORTB |= PORTB_MASK;
 
-   log_output_P(LOG_MODULE_S0, LOG_LEVEL_DEBUG, "initialized");
+    DDRC &= ~PORTC_MASK;
+    PORTC |= PORTC_MASK;
+
+    DDRD &= ~PORTD_MASK;
+    PORTD |= PORTD_MASK;
+
+    fifo_init(&s0_fifo, s0_fifo_buffer, S0_FIFO_BUFFER_SIZE);
+
+    log_output_P(LOG_MODULE_S0, LOG_LEVEL_DEBUG, "initialized");
 
 }
-
-static uint8_t state_porta;
 
 void s0_poll()
 {
 
-  // Function: Debounce port?
-  // debounce_port(PINA, MASK, &state_porta);
+    // Iterate over all available channels
+    for (uint8_t i = 0; i < CHANNELS; i++) {
 
-  log_output_P(LOG_MODULE_S0, LOG_LEVEL_DEBUG, "?");
+        // Skip undefined channels
+        if (channels[i].port == NULL) {
 
-  uint8_t state = false;
+            continue;
 
-  //state = PINC & S0_PORTA_MASK;
+        }
 
-  if (state != state_porta) {
+        // Check if signal is low
+        if (!(*(channels[i].port) & _BV(channels[i].pin))) {
 
-    state_porta = state;
-    log_output_P(LOG_MODULE_S0, LOG_LEVEL_DEBUG, "PORTA change");
+            if (impulses[i] < UINT8_MAX) {
 
-  }
+                impulses[i]++;
+
+            }
+
+        // Signal is high
+        } else {
+
+            // Check if pulse length is valid
+            if (impulses[i] != 0 && impulses[i] > prefs_get()->channels[i].min && impulses[i] < prefs_get()->channels[i].max) {
+
+                // Put channel into FIFO, so it will be handled asynchronously by s0_handle()
+                fifo_put(&s0_fifo, i);
+
+            }
+
+            // Reset debounce counter
+            impulses[i] = 0;
+
+        }
+
+    }
 
 }
 
-//typedef enum {
-//  CHANNEL0 = 0,
-//  CHANNEL1 = 1,
-//} channel_t;
+void s0_handle()
+{
 
-//bool s0_get(channel_t channel) {
-//  return last_state_s0a;
-//}
+    uint8_t channel;
+
+    while (fifo_get_nowait(&s0_fifo, &channel)) {
+
+        prefs_get()->channels[channel].count++;
+        prefs_save_block(&(prefs_get()->channels[channel].count), membersize(channel_prefs_t, count));
+
+        log_output_P(LOG_MODULE_S0, LOG_LEVEL_INFO, "channel: %u, unit: %u, count: %lu", channel, prefs_get()->channels[channel].unit, prefs_get()->channels[channel].count);
+
+    }
+
+}
 

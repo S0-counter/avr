@@ -17,21 +17,7 @@
  * along with S0-counter. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// ports
-#define S0_PORTA_MASK 0x1
-#define S0_PORTB_MASK 0x0
-#define S0_PORTC_MASK 0x0
-#define S0_PORTD_MASK 0x0
-
-// TODO Make table?
-#define S0_CHANNEL0 PORTA, 0
-#define S0_CHANNEL1 PORTA, 1
-#define S0_CHANNEL2 PORTA, 2
-
-// Min & max values
-#define S0_MIN 25
-#define S0_MAX 35
-
 void s0_init();
 void s0_poll();
+void s0_handle();
 

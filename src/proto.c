@@ -138,8 +138,7 @@ static void _channel(uint8_t argc, char* argv[]) {
 
         if (strncmp_P(argv[3], PSTR("info"), sizeof("info")) == 0) {
 
-            // TODO Fixed point arithmetic
-            proto_output_P(PSTR("name: %s, unit: %d, min: %d, max: %d, counter: %d"), 
+            proto_output_P(PSTR("name: %s, unit: %u, min: %u, max: %u, count: %lu"),
                 prefs_get()->channels[channel].name,
                 prefs_get()->channels[channel].unit,
                 prefs_get()->channels[channel].min,
@@ -216,7 +215,6 @@ static void _channel(uint8_t argc, char* argv[]) {
 
             uint64_t count;
 
-            // TODO Fixed point arithmetic
             if (sscanf_P(argv[4], PSTR("%lu"), &count) != 1) {
 
                 goto error;

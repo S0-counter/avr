@@ -55,6 +55,7 @@
 
 #include "i2c.h"
 #include "log.h"
+#include "s0.h"
 #include "timer.h"
 #include "uart.h"
 #include "prefs.h"
@@ -80,20 +81,15 @@ __attribute__((OS_main)) int main()
     // Logging
     log_enable();
 
-    //log_set_level(LOG_MODULE_MAIN, LOG_LEVEL_DEBUG);
-    //log_set_level(LOG_MODULE_UART, LOG_LEVEL_DEBUG);
-    //log_set_level(LOG_MODULE_TIMER, LOG_LEVEL_DEBUG);
-    //log_set_level(LOG_MODULE_S0, LOG_LEVEL_DEBUG);
-    //log_set_level(LOG_MODULE_PROTO, LOG_LEVEL_DEBUG);
-    //log_set_level(LOG_MODULE_I2C, LOG_LEVEL_DEBUG);
-    //log_set_level(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG);
-    //log_set_level(LOG_MODULE_FRAM, LOG_LEVEL_DEBUG);
+    // Enable S0 logging
+    log_set_level(LOG_MODULE_S0, LOG_LEVEL_INFO);
 
     // Enable interrupts globally
     sei();
 
     // Initialize modules
     uart_init();
+    s0_init();
     timer_init();
     i2c_init();
     prefs_init();
@@ -105,6 +101,7 @@ __attribute__((OS_main)) int main()
     while(1) {
 
         proto_handle();
+        s0_handle();
 
     }
 

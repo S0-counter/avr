@@ -37,6 +37,7 @@
 #include <avr/interrupt.h>
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "fifo.h"
 #include "uart.h"

@@ -50,7 +50,7 @@
  * @see UART_BAUD
  * @see uart_init()
  */
-#define UART_BAUD 9600
+#define UART_BAUD 38400
 
 /**
  * @brief Defines the size of uart_buffer_in
