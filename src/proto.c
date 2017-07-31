@@ -251,10 +251,19 @@ static void _log(uint8_t argc, char* argv[]) {
 
 }
 
-static void _factory(uint8_t argc, char* argv[]) {
+// TODO Implement normal reset, not only factory?
+static void _reset(uint8_t argc, char* argv[]) {
 
-    prefs_reset();
-    proto_ok();
+    if (argc == 2 && strncmp_P(argv[1], PSTR("factory"), sizeof("factory")) == 0) {
+
+        prefs_reset();
+        proto_ok();
+
+    } else {
+
+        proto_error();
+
+    }
 
 }
 
@@ -263,7 +272,7 @@ const char str_version[] PROGMEM = "version";
 const char str_memory[] PROGMEM = "memory";
 const char str_channel[] PROGMEM = "channel";
 const char str_log[] PROGMEM = "log";
-const char str_factory[] PROGMEM = "factory";
+const char str_reset[] PROGMEM = "reset";
 
 typedef struct
 {
@@ -284,7 +293,7 @@ static const proto_command_t proto_commands[] PROGMEM = {
     {str_memory, 0, _memory},
     {str_channel, -1, _channel},
     {str_log, -1, _log},
-    {str_factory, 0, _factory},
+    {str_reset, -1, _reset},
 
 };
 
