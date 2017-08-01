@@ -56,10 +56,6 @@ static inline void timer_10hz()
 static inline void timer_1hz()
 {
 
-    // TODO Remove
-    DDRB |= _BV(PB1);
-    PORTB ^= _BV(PB1);
-
 }
 
 ISR(TIMER0_COMPA_vect)

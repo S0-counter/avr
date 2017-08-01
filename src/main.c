@@ -106,12 +106,6 @@ __attribute__((OS_main)) int main()
 
         proto_handle();
 
-        // TODO Remove
-        DDRB |= _BV(PB0);
-        PORTB ^= _BV(PB0);
-
-        _delay_ms(1000);
-
     }
 
 }
