@@ -99,10 +99,10 @@ static void _ping(uint8_t argc, char* argv[])
 
 }
 
-static void _version(uint8_t argc, char* argv[])
+static void _info(uint8_t argc, char* argv[])
 {
 
-    proto_output_P(PSTR("%d"), VERSION);
+    proto_output_P(PSTR("version: %u, channels: %u"), VERSION, CHANNELS);
 
 }
 
@@ -270,7 +270,7 @@ static void _reset(uint8_t argc, char* argv[]) {
 }
 
 const char str_ping[] PROGMEM = "ping";
-const char str_version[] PROGMEM = "version";
+const char str_info[] PROGMEM = "info";
 const char str_memory[] PROGMEM = "memory";
 const char str_channel[] PROGMEM = "channel";
 const char str_log[] PROGMEM = "log";
@@ -291,7 +291,7 @@ typedef struct
 static const proto_command_t proto_commands[] PROGMEM = {
 
     {str_ping, 0, _ping},
-    {str_version, 0, _version},
+    {str_info, 0, _info},
     {str_memory, 0, _memory},
     {str_channel, -1, _channel},
     {str_log, -1, _log},
