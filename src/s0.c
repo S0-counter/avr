@@ -87,7 +87,7 @@ void s0_poll()
     for (uint8_t i = 0; i < CHANNELS; i++) {
 
         // Skip undefined channels
-        if (channels[i].port == NULL) {
+        if (channels[i].port == NULL || !(prefs_get()->channels[i].enabled)) {
 
             continue;
 
@@ -132,7 +132,7 @@ void s0_handle()
         prefs_get()->channels[channel].count++;
         prefs_save_block(&(prefs_get()->channels[channel].count), membersize(channel_prefs_t, count));
 
-        log_output_P(LOG_MODULE_S0, LOG_LEVEL_INFO, "channel: %u, unit: %u, count: %lu", channel, prefs_get()->channels[channel].unit, prefs_get()->channels[channel].count);
+        log_output_P(LOG_MODULE_S0, LOG_LEVEL_INFO, "channel: %u, count: %lu", channel, prefs_get()->channels[channel].count);
 
     }
 

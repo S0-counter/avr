@@ -21,6 +21,7 @@
 
 #include "version.h"
 
+// TODO Define this in a more useful place/way (sizeof)?
 #define CHANNELS 8
 
 // Per channel
@@ -28,11 +29,8 @@
 // TODO Save log levels?
 typedef struct {
 
-    // Name/description of channel
-    char name[32];
-
-    // Impulses per unit (e.g. 2000 imps / kWh) -> 0 = disabled
-    uint16_t unit;
+    // Status (Disabled = ignored)
+    bool enabled;
 
     // Min impulse length
     uint8_t min;
@@ -40,7 +38,7 @@ typedef struct {
     // Max impulse length
     uint8_t max;
 
-    // Actual counter (fixed point arithmetic 48 + 16?)
+    // Number of pulses
     uint32_t count;
 
 } channel_prefs_t;

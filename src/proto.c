@@ -114,7 +114,7 @@ static void _memory(uint8_t argc, char* argv[]) {
 
 static void _channel(uint8_t argc, char* argv[]) {
 
-    if (argc < 4) {
+    if (argc < 3) {
 
         goto error;
 
@@ -134,60 +134,38 @@ static void _channel(uint8_t argc, char* argv[]) {
 
     }
 
-    if (strncmp_P(argv[2], PSTR("get"), sizeof("get")) == 0) {
+    if (argc == 3 && strncmp_P(argv[2], PSTR("info"), sizeof("info")) == 0) {
 
-        if (strncmp_P(argv[3], PSTR("info"), sizeof("info")) == 0) {
+        proto_output_P(PSTR("enabled: %S, min: %u, max: %u, count: %lu"),
+            prefs_get()->channels[channel].enabled ? PSTR("true") : PSTR("false"),
+            prefs_get()->channels[channel].min,
+            prefs_get()->channels[channel].max,
+            prefs_get()->channels[channel].count);
 
-            proto_output_P(PSTR("name: %s, unit: %u, min: %u, max: %u, count: %lu"),
-                prefs_get()->channels[channel].name,
-                prefs_get()->channels[channel].unit,
-                prefs_get()->channels[channel].min,
-                prefs_get()->channels[channel].max,
-                prefs_get()->channels[channel].count);
+        return;
 
-            return;
+    } else if (argc == 5 && strncmp_P(argv[2], PSTR("set"), sizeof("set")) == 0) {
 
-        }
+        if (strncmp_P(argv[3], PSTR("enabled"), sizeof("enabled")) == 0) {
 
-    } else if (strncmp_P(argv[2], PSTR("set"), sizeof("set")) == 0) {
+            bool enabled;
 
-        if (strncmp_P(argv[3], PSTR("name"), sizeof("name")) == 0) {
+            if (strncmp_P(argv[4], PSTR("true"), sizeof("true")) == 0) {
 
-            char str[32] = {};
+                enabled = true;
 
-            for (uint8_t i = 4; i < argc; i++) {
+            } else if (strncmp_P(argv[4], PSTR("false"), sizeof("false")) == 0) {
 
-                if (strlen(str) + strlen(argv[i]) < membersize(channel_prefs_t, name)) {
+                enabled = false;
 
-                    strcat(str, argv[i]);
-                    strcat(str, " ");
-
-                } else {
-
-                    goto error;
-
-                }
-
-            }
-
-            // Replace last space with null termination
-            str[strlen(str) - 1] = '\0';
-
-            strncpy(prefs_get()->channels[channel].name, str, membersize(channel_prefs_t, name));
-            prefs_save_block(&(prefs_get()->channels[channel].name), membersize(channel_prefs_t, name));
-
-        } else if (strncmp_P(argv[3], PSTR("unit"), sizeof("unit")) == 0) {
-
-            uint16_t unit;
-
-            if (sscanf_P(argv[4], PSTR("%hu"), &unit) != 1) {
+            } else {
 
                 goto error;
 
             }
 
-            prefs_get()->channels[channel].unit = unit;
-            prefs_save_block(&(prefs_get()->channels[channel].unit), membersize(channel_prefs_t, unit));
+            prefs_get()->channels[channel].enabled = enabled;
+            prefs_save_block(&(prefs_get()->channels[channel].enabled), membersize(channel_prefs_t, enabled));
 
         } else if (strncmp_P(argv[3], PSTR("min"), sizeof("min")) == 0) {
 
