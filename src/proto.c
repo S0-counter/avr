@@ -174,6 +174,7 @@ static void _channel(uint8_t argc, char* argv[]) {
             str[strlen(str) - 1] = '\0';
 
             strncpy(prefs_get()->channels[channel].name, str, membersize(channel_prefs_t, name));
+            prefs_save_block(&(prefs_get()->channels[channel].name), membersize(channel_prefs_t, name));
 
         } else if (strncmp_P(argv[3], PSTR("unit"), sizeof("unit")) == 0) {
 
@@ -186,6 +187,7 @@ static void _channel(uint8_t argc, char* argv[]) {
             }
 
             prefs_get()->channels[channel].unit = unit;
+            prefs_save_block(&(prefs_get()->channels[channel].unit), membersize(channel_prefs_t, unit));
 
         } else if (strncmp_P(argv[3], PSTR("min"), sizeof("min")) == 0) {
 
@@ -198,6 +200,7 @@ static void _channel(uint8_t argc, char* argv[]) {
             }
 
             prefs_get()->channels[channel].min = min;
+            prefs_save_block(&(prefs_get()->channels[channel].min), membersize(channel_prefs_t, min));
 
         } else if (strncmp_P(argv[3], PSTR("max"), sizeof("max")) == 0) {
 
@@ -210,6 +213,7 @@ static void _channel(uint8_t argc, char* argv[]) {
             }
 
             prefs_get()->channels[channel].max = max;
+            prefs_save_block(&(prefs_get()->channels[channel].max), membersize(channel_prefs_t, max));
 
         }  else if (strncmp_P(argv[3], PSTR("count"), sizeof("count")) == 0) {
 
@@ -222,6 +226,7 @@ static void _channel(uint8_t argc, char* argv[]) {
             }
 
             prefs_get()->channels[channel].count = count;
+            prefs_save_block(&(prefs_get()->channels[channel].count), membersize(channel_prefs_t, count));
 
         } else {
 
@@ -229,7 +234,6 @@ static void _channel(uint8_t argc, char* argv[]) {
 
         }
 
-        prefs_save();
         proto_ok();
 
         return;

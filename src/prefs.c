@@ -86,9 +86,19 @@ prefs_t* prefs_get() {
 
 void prefs_save() {
 
-    log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "saving");
+    log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "saving completely");
 
     fram_write_block(&prefs_fram, &prefs, sizeof(prefs_t));
+
+}
+
+void prefs_save_block(const void* src, size_t len) {
+
+    size_t offset = (size_t)src - (size_t)&prefs;
+
+    log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "saving block, dst: %p, src: %p, off: %u, len: %u", &prefs_fram, &prefs, offset, len);
+
+    fram_write_block(&prefs_fram + offset, &prefs + offset, len);
 
 }
 

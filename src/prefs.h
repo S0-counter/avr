@@ -58,5 +58,6 @@ typedef struct {
 void prefs_init();
 prefs_t* prefs_get();
 void prefs_save();
+void prefs_save_block(const void* src, size_t len);
 void prefs_reset();
 
