@@ -98,7 +98,7 @@ void prefs_save_block(const void* src, size_t len) {
 
     log_output_P(LOG_MODULE_PREFS, LOG_LEVEL_DEBUG, "saving block, dst: %p, src: %p, off: %u, len: %u", &prefs_fram, &prefs, offset, len);
 
-    fram_write_block(&prefs_fram + offset, &prefs + offset, len);
+    fram_write_block((void*)((size_t)&prefs_fram + (size_t)offset), (const void*)((size_t)&prefs + (size_t)offset), len);
 
 }
 
