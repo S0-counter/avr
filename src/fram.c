@@ -53,7 +53,7 @@ void fram_read_block(const void* src, void* dst, size_t len) {
 
         uint8_t data = i2c_read(i < (len - 1));
 
-        log_output_P(LOG_MODULE_FRAM, LOG_LEVEL_DEBUG, "%p: %d", dst, data);
+        log_output_P(LOG_MODULE_FRAM, LOG_LEVEL_DEBUG, "src: %p, dst: %p: %x", src, dst, data);
 
         *(uint8_t*)dst = data;
         dst++;
@@ -83,7 +83,7 @@ void fram_write_block(void* dst, const void* src, size_t len) {
 
         uint8_t data = *(uint8_t*)src;
 
-        log_output_P(LOG_MODULE_FRAM, LOG_LEVEL_DEBUG, "%p: %d", src, data);
+        log_output_P(LOG_MODULE_FRAM, LOG_LEVEL_DEBUG, "src: %p, dst: %p: %x", src, dst, data);
 
         i2c_write(data);
         src++;
