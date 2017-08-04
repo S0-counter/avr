@@ -46,6 +46,8 @@ static inline void timer_1khz()
 static inline void timer_100hz()
 {
 
+    s0_output();
+
 }
 
 

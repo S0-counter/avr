@@ -20,4 +20,5 @@
 void s0_init();
 void s0_poll();
 void s0_handle();
+void s0_output();
 

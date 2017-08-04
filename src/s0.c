@@ -24,6 +24,7 @@
 #include "prefs.h"
 #include "s0.h"
 #include "timer.h"
+#include "ports.h"
 
 #define membersize(type, member) sizeof(((type *)0)->member)
 
@@ -57,8 +58,13 @@ static s0_channel_t channels[CHANNELS] = {
 
 #define S0_FIFO_BUFFER_SIZE 64
 
+#define S0_OUTPUT PORTB, 0
+#define S0_OUTPUT_LENGTH 10
+
 static fifo_t s0_fifo;
 static uint8_t s0_fifo_buffer[S0_FIFO_BUFFER_SIZE];
+
+static volatile uint8_t s0_output_counter = 0;
 
 void s0_init()
 {
@@ -73,6 +79,10 @@ void s0_init()
 
     DDRD &= ~PORTD_MASK;
     PORTD |= PORTD_MASK;
+
+    // Disable output LED
+    DDR(S0_OUTPUT) |= _BV(BIT(S0_OUTPUT));
+    PORT(S0_OUTPUT) &= ~_BV(BIT(S0_OUTPUT));
 
     fifo_init(&s0_fifo, s0_fifo_buffer, S0_FIFO_BUFFER_SIZE);
 
@@ -122,6 +132,21 @@ void s0_poll()
 
 }
 
+void s0_output() {
+
+    if (s0_output_counter != 0) {
+
+        PORT(S0_OUTPUT) |= _BV(BIT(S0_OUTPUT));
+        s0_output_counter--;
+
+    } else {
+
+        PORT(S0_OUTPUT) &= ~_BV(BIT(S0_OUTPUT));
+
+    }
+
+}
+
 void s0_handle()
 {
 
@@ -131,6 +156,8 @@ void s0_handle()
 
         prefs_get()->channels[channel].count++;
         prefs_save_block(&(prefs_get()->channels[channel].count), membersize(channel_prefs_t, count));
+
+        s0_output_counter = S0_OUTPUT_LENGTH;
 
         log_output_P(LOG_MODULE_S0, LOG_LEVEL_INFO, "channel: %u, count: %lu", channel, prefs_get()->channels[channel].count);
 
