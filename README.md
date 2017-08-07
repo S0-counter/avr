@@ -8,18 +8,18 @@ After the signal has been analyzed a parsable string is being output, which can
 then be used by other projects, e.g. [volkszaehler][1], in order to get nice
 looking graphs and long-term statistics.
 
-**This project is still under development and not yet fully functionable.**
+**This project is still under development and should be considered non-stable.**
 
 ## HIGHLIGHTS
 
 These are some of the highlights, which make this project unique:
 
 - **Multiple channels:** Up to 48 channels are supported, making this the most
-  extensive S0 analyzer available. 
+  extensive S0 signal analyzer available.
 
 - **Configuration:** Each channel has its own configuration. While the defaults
-  should be sane enough in most cases, timing and initial values can be (re)set
-  at any point in time rather easily by means of a documented
+  should be sane enough in most cases, signal timings and initial values can be
+  (re)set at any point in time rather easily by means of a documented
   [UART protocol][2].
 
 - **Open Source**: Both software and hardware are freely available and Open
@@ -82,11 +82,9 @@ look at the `TODO` file within the projects root directory or the
 
 ## DONATIONS
 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png "Flattr This!")](https://flattr.com/submit/auto?user_id=johnpatcher&url=https://github.com/S0-counter/avr)
+PayPal: [![PayPal donation](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif "PayPal - The safer, easier way to pay online!")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DTKTNRC42GFPN)
 
-[![PayPal donation](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif "PayPal")](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=karol+paypal%40babioch%2ede&lc=DE&item_name=S0-counter&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest)
-
-Bitcoin: `1Dn6MEKgRAgdRS8Aeg88fug9XmdgTRpCDA`
+Bitcoin: `14kgbYKvtjdH2sNA5iq7jjTmZFNFeWxydo`
 
 ## LICENSE
 
@@ -111,7 +109,7 @@ Bitcoin: `1Dn6MEKgRAgdRS8Aeg88fug9XmdgTRpCDA`
 [3]: https://github.com/S0-counter/avr
 [4]: http://www.stack.nl/~dimitri/doxygen/
 [5]: http://www.nongnu.org/avrdude/
-[6]: https://github.com/S0-counter/avr
+[6]: https://github.com/S0-counter
 [7]: https://help.github.com/articles/using-pull-requests
 [8]: https://github.com/S0-counter/avr/issues
 
