@@ -26,7 +26,7 @@
 
 #include "i2c.h"
 #include "log.h"
-#include "ports.h"
+#include "io.h"
 
 #define SCL PORTC, 5
 #define SDA PORTC, 4

@@ -85,8 +85,8 @@
  * @warning This hasn't been thoroughly tested with every AVR yet.
  */
 
-#ifndef _PORTS_H_
-#define _PORTS_H_
+#ifndef _IO_H_
+#define _IO_H_
 
 /**
  * @brief Returns the PORT register of an appropriate definition
@@ -187,5 +187,5 @@
  */
 #define BIT_(a, b) b
 
-#endif /* _PORTS_H_ */
+#endif /* _IO_H_ */
 

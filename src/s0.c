@@ -24,7 +24,7 @@
 #include "prefs.h"
 #include "s0.h"
 #include "timer.h"
-#include "ports.h"
+#include "io.h"
 
 #define membersize(type, member) sizeof(((type *)0)->member)
 
