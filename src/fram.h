@@ -17,6 +17,9 @@
  * along with S0-counter. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _FRAM_H_
+#define _FRAM_H_
+
 #include <inttypes.h>
 #include <stddef.h>
 
@@ -27,4 +30,6 @@ void fram_read_block(const void* src, void* dst, size_t len);
 
 void fram_write_byte(uint8_t* dst, uint8_t val);
 void fram_write_block(void* dst, const void* src, size_t len);
+
+#endif /* _FRAM_H_ */
 

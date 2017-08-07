@@ -30,8 +30,8 @@
  * @see uart.c
  */
 
-#ifndef _WC_UART_H_
-#define _WC_UART_H_
+#ifndef _UART_H_
+#define _UART_H_
 
 #include <avr/io.h>
 #include <avr/pgmspace.h>
@@ -85,5 +85,5 @@ void uart_flush_output();
  */
 #define uart_puts_P(str) uart_puts_p(PSTR(str))
 
-#endif /* _WC_UART_H_ */
+#endif /* _UART_H_ */
 

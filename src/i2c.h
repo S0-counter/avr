@@ -33,8 +33,8 @@
  * @see i2c_master.c
  */
 
-#ifndef _WC_I2C_MASTER_H_
-#define _WC_I2C_MASTER_H_
+#ifndef _I2C_H_
+#define _I2C_H_
 
 #include <stdbool.h>
 
@@ -62,5 +62,5 @@ uint8_t i2c_read_nack();
 
 uint8_t i2c_read(bool ack);
 
-#endif /* _WC_I2C_MASTER_H_ */
+#endif /* _I2C_H_ */
 

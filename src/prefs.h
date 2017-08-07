@@ -17,6 +17,9 @@
  * along with S0-counter. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _PREFS_H_
+#define _PREFS_H_
+
 #include <stdlib.h>
 
 #include "version.h"
@@ -58,4 +61,6 @@ prefs_t* prefs_get();
 void prefs_save();
 void prefs_save_block(const void* src, size_t len);
 void prefs_reset();
+
+#endif /* _PREFS_H_ */
 

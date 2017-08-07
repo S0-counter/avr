@@ -37,8 +37,8 @@
  * @see log.c
  */
 
-#ifndef _WC_LOG_H_
-#define _WC_LOG_H_
+#ifndef _LOG_H_
+#define _LOG_H_
 
 #include <avr/pgmspace.h>
 
@@ -126,5 +126,5 @@ void log_output_p(log_module_t module, log_level_t level, const char* fmt, ...);
  */
 #define log_output_P(module, level, fmt, ...) log_output_p(module, level, PSTR(fmt), ##__VA_ARGS__)
 
-#endif /* _WC_LOG_H_ */
+#endif /* _LOG_H_ */
 

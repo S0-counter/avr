@@ -134,7 +134,7 @@ void s0_poll()
 
 void s0_output() {
 
-    if (s0_output_counter != 0) {
+    if (s0_output_counter > 0) {
 
         PORT(S0_OUTPUT) |= _BV(BIT(S0_OUTPUT));
         s0_output_counter--;

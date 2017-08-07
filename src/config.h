@@ -23,7 +23,12 @@
  * Configuration file for the whole project
  */
 
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
 #define ENABLE_MEMCHECK 1
 
 #define ENABLE_LOGGING 1
+
+#endif /* _CONFIG_H_ */
 

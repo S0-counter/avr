@@ -17,8 +17,13 @@
  * along with S0-counter. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _S0_H_
+#define _S0_H_
+
 void s0_init();
 void s0_poll();
 void s0_handle();
 void s0_output();
+
+#endif /* _S0_H_ */
 

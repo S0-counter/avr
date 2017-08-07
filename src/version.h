@@ -26,6 +26,9 @@
  * whenver access to the version is needed.
  */
 
+#ifndef _VERSION_H_
+#define _VERSION_H_
+
 /**
  * @brief Type describing the version of this project
  */
@@ -37,4 +40,6 @@ typedef uint8_t version_t;
  * @note This should be incremented whenever a new version is released.
  */
 #define VERSION 1
+
+#endif /* _VERSION_H_ */
 

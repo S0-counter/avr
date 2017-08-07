@@ -17,5 +17,10 @@
  * along with S0-counter. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _TIMER_H_
+#define _TIMER_H_
+
 void timer_init();
+
+#endif /* _TIMER_H_ */
 
